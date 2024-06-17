@@ -11,6 +11,7 @@ dp = Dispatcher()
 @dp.message(CommandStart)
 async def send_welcome(message: types.Message):
     await message.answer("Welcome! This bot handles join requests for a channel.")
+    await message.answer(f"ID of this chat is {message.chat.id}")
 
 
 @dp.chat_join_request()
@@ -41,6 +42,7 @@ async def handle_chat_join_request(message: types.ChatJoinRequest):
                     chat_id=user_id,
                 )
         except Exception as e:
+            print(e)
             # Decline the request if there's an error (e.g., user is not found in the check channel)
             await bot.decline_chat_join_request(chat_id=chat_id, user_id=user_id)
             if settings.LOG_CHAT_ID is not None:
@@ -61,7 +63,6 @@ async def handle_chat_member_update(chat_member_update: types.ChatMemberUpdated)
         user = chat_member_update.from_user
         user_id = user.id
         chat_id = chat_member_update.chat.id
-
         if settings.LOG_CHAT_ID is not None:
             await bot.send_message(
                 settings.LOG_CHAT_ID,
