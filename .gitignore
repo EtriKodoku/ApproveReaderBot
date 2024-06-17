@@ -1,0 +1,11 @@
+# Environment
+.env
+/venv/*
+
+# Pycache
+/__pycache__/*
+/__pycache__/
+*.pyc
+
+# Runtime files
+*.txt
