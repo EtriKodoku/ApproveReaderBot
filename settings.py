@@ -10,6 +10,7 @@ class Settings(BaseSettings):
 
     class Config:
         env_prefix = "AR_"
+        env_file = ".env"
 
 
 settings = Settings()
