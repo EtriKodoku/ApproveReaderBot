@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 
 
@@ -10,7 +11,7 @@ class Settings(BaseSettings):
 
     class Config:
         env_prefix = "AR_"
-        env_file = ".env"
+       
 
-
+load_dotenv()
 settings = Settings()
