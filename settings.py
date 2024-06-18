@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
     class Config:
         env_prefix = "AR_"
-       
+
 
 load_dotenv()
 settings = Settings()
