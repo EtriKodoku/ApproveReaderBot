@@ -78,7 +78,7 @@ async def handle_chat_member_update(chat_member_update: types.ChatMemberUpdated)
             if settings.LOG_CHAT_ID is not None:
                 await bot.send_message(
                     settings.LOG_CHAT_ID,
-                    f"User {user.username if user.username is not None else user.full_name} has left the main channel.",
+                    f"User {user.username if user.username is not None else user.full_name} has left the outer channel.",
                 )
             await bot.send_message(
                 chat_id=user_id,
@@ -88,7 +88,7 @@ async def handle_chat_member_update(chat_member_update: types.ChatMemberUpdated)
             if settings.LOG_CHAT_ID is not None:
                 await bot.send_message(
                     settings.LOG_CHAT_ID,
-                    f"User {user.username if user.username is not None else user.full_name} has left the storing channel.",
+                    f"User {user.username if user.username is not None else user.full_name} has left the inner channel.",
                 )
             await bot.send_message(
                 chat_id=user_id,
