@@ -34,7 +34,7 @@ async def handle_chat_join_request(message: types.ChatJoinRequest):
                 if settings.LOG_CHAT_ID is not None:
                     await bot.send_message(
                         settings.LOG_CHAT_ID,
-                        f"User {user.username if user.username is not None else user.full_name} has been approved.",
+                        f"User {'@'+ user.username if user.username is not None else user.full_name} has been approved.",
                     )
             else:
                 await bot.decline_chat_join_request(chat_id=chat_id, user_id=user_id)
@@ -49,7 +49,7 @@ async def handle_chat_join_request(message: types.ChatJoinRequest):
             if settings.LOG_CHAT_ID is not None:
                 await bot.send_message(
                     settings.LOG_CHAT_ID,
-                    f"Occured error. User {user.username if user.username is not None else user.full_name} has been declined.",
+                    f"Occured error. User {'@'+ user.username if user.username is not None else user.full_name} has been declined.",
                 )
 
 
@@ -66,7 +66,7 @@ async def handle_chat_member_update(chat_member_update: types.ChatMemberUpdated)
         chat_id = chat_member_update.chat.id
         with open("banned.txt", "a") as ban:
             ban.write(
-                f"{time} {user_id} {user.username if user.username is not None else user.full_name}\n"
+                f"{time} {user_id} {'@'+ user.username if user.username is not None else user.full_name}\n"
             )
         await bot.ban_chat_member(
             chat_id=settings.INNER_CHANNEL_ID,
@@ -78,7 +78,7 @@ async def handle_chat_member_update(chat_member_update: types.ChatMemberUpdated)
             if settings.LOG_CHAT_ID is not None:
                 await bot.send_message(
                     settings.LOG_CHAT_ID,
-                    f"User {user.username if user.username is not None else user.full_name} has left the outer channel.",
+                    f"User {'@'+ user.username if user.username is not None else user.full_name} has left the outer channel.",
                 )
             await bot.send_message(
                 chat_id=user_id,
@@ -88,7 +88,7 @@ async def handle_chat_member_update(chat_member_update: types.ChatMemberUpdated)
             if settings.LOG_CHAT_ID is not None:
                 await bot.send_message(
                     settings.LOG_CHAT_ID,
-                    f"User {user.username if user.username is not None else user.full_name} has left the inner channel.",
+                    f"User {'@'+ user.username if user.username is not None else user.full_name} has left the inner channel.",
                 )
             await bot.send_message(
                 chat_id=user_id,
