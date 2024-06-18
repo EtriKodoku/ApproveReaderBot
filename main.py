@@ -64,11 +64,6 @@ async def handle_chat_member_update(chat_member_update: types.ChatMemberUpdated)
         user = chat_member_update.from_user
         user_id = user.id
         chat_id = chat_member_update.chat.id
-        if settings.LOG_CHAT_ID is not None:
-            await bot.send_message(
-                settings.LOG_CHAT_ID,
-                f"User {user.username if user.username is not None else user.full_name} has left the chat.",
-            )
         with open("banned.txt", "a") as ban:
             ban.write(
                 f"{time} {user_id} {user.username if user.username is not None else user.full_name}\n"
@@ -79,10 +74,26 @@ async def handle_chat_member_update(chat_member_update: types.ChatMemberUpdated)
             until_date=time + datetime.timedelta(seconds=30),
         )
         await bot.unban_chat_member(chat_id=settings.JOING_CHANNEL_ID, user_id=user_id)
-        await bot.send_message(
-            chat_id=user_id,
-            text=f"Нам сумно, що ви покидаєте нашу родину🥺. Ви завжди можете повернутись за цим посиланням: {settings.LINK}",
-        )
+        if chat_id == settings.CHECK_CHANNEL_ID:
+            if settings.LOG_CHAT_ID is not None:
+                await bot.send_message(
+                    settings.LOG_CHAT_ID,
+                    f"User {user.username if user.username is not None else user.full_name} has left the main channel.",
+                )
+            await bot.send_message(
+                chat_id=user_id,
+                text=f"Нам сумно, що ви покидаєте нашу родину🥺. Ви завжди можете повернутись за цим посиланням: {settings.LINK}",
+            )
+        else:
+            if settings.LOG_CHAT_ID is not None:
+                await bot.send_message(
+                    settings.LOG_CHAT_ID,
+                    f"User {user.username if user.username is not None else user.full_name} has left the storing channel.",
+                )
+            await bot.send_message(
+                chat_id=user_id,
+                text=f"Нам сумно, що ви покидаєте нашу скарбницю🥺. Ми завжди чекатимемо на ваше повернення\nПосилання на основний канал: {settings.LINK}",
+            )
 
 
 if __name__ == "__main__":
