@@ -23,10 +23,10 @@ async def handle_chat_join_request(message: types.ChatJoinRequest):
     print(
         f"{time}: Request {user_id} {user.username if user.username is not None else user.full_name}"
     )
-    if chat_id == settings.JOING_CHANNEL_ID:
+    if chat_id == settings.INNER_CHANNEL_ID:
         try:
             member = await bot.get_chat_member(
-                chat_id=settings.CHECK_CHANNEL_ID, user_id=user_id
+                chat_id=settings.OUTER_CHANNEL_ID, user_id=user_id
             )
             # If the user is a member of the check channel, approve the request
             if member.status in ["member", "administrator", "creator"]:
@@ -69,12 +69,12 @@ async def handle_chat_member_update(chat_member_update: types.ChatMemberUpdated)
                 f"{time} {user_id} {user.username if user.username is not None else user.full_name}\n"
             )
         await bot.ban_chat_member(
-            chat_id=settings.JOING_CHANNEL_ID,
+            chat_id=settings.INNER_CHANNEL_ID,
             user_id=user_id,
             until_date=time + datetime.timedelta(seconds=30),
         )
-        await bot.unban_chat_member(chat_id=settings.JOING_CHANNEL_ID, user_id=user_id)
-        if chat_id == settings.CHECK_CHANNEL_ID:
+        await bot.unban_chat_member(chat_id=settings.INNER_CHANNEL_ID, user_id=user_id)
+        if chat_id == settings.OUTER_CHANNEL_ID:
             if settings.LOG_CHAT_ID is not None:
                 await bot.send_message(
                     settings.LOG_CHAT_ID,
