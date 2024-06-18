@@ -21,7 +21,7 @@ async def handle_chat_join_request(message: types.ChatJoinRequest):
     user_id = user.id
     chat_id = message.chat.id
     print(
-        f"{time}: Request {user_id} {user.username if user.username is not None else user.firstname}"
+        f"{time}: Request {user_id} {user.username if user.username is not None else user.full_name}"
     )
     if chat_id == settings.JOING_CHANNEL_ID:
         try:
@@ -34,21 +34,22 @@ async def handle_chat_join_request(message: types.ChatJoinRequest):
                 if settings.LOG_CHAT_ID is not None:
                     await bot.send_message(
                         settings.LOG_CHAT_ID,
-                        f"User {chat_member_update.from_user.full_name} has been approved.",
+                        f"User {user.username if user.username is not None else user.full_name} has been approved.",
                     )
             else:
+                await bot.decline_chat_join_request(chat_id=chat_id, user_id=user_id)
                 await bot.send_message(
                     text=f"Щоб увійти, вам потрібно спочатку доєднатись до головного каналу\n{settings.LINK}",
                     chat_id=user_id,
                 )
         except Exception as e:
             print(e)
-            # Decline the request if there's an error (e.g., user is not found in the check channel)
+            # Decline the request if there's an error
             await bot.decline_chat_join_request(chat_id=chat_id, user_id=user_id)
             if settings.LOG_CHAT_ID is not None:
                 await bot.send_message(
                     settings.LOG_CHAT_ID,
-                    f"Occured error. User {chat_member_update.from_user.full_name} has been declined.",
+                    f"Occured error. User {user.username if user.username is not None else user.full_name} has been declined.",
                 )
 
 
@@ -66,11 +67,11 @@ async def handle_chat_member_update(chat_member_update: types.ChatMemberUpdated)
         if settings.LOG_CHAT_ID is not None:
             await bot.send_message(
                 settings.LOG_CHAT_ID,
-                f"User {chat_member_update.from_user.full_name} has left the chat.",
+                f"User {user.username if user.username is not None else user.full_name} has left the chat.",
             )
         with open("banned.txt", "a") as ban:
             ban.write(
-                f"{time} {user_id} {user.username if user.username is not None else user.firstname}\n"
+                f"{time} {user_id} {user.username if user.username is not None else user.full_name}\n"
             )
         await bot.ban_chat_member(
             chat_id=settings.JOING_CHANNEL_ID,
