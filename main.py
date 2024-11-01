@@ -49,8 +49,13 @@ async def handle_chat_join_request(message: types.ChatJoinRequest):
             if settings.LOG_CHAT_ID is not None:
                 await bot.send_message(
                     settings.LOG_CHAT_ID,
-                    f"Occured error. User {'@'+ user.username if user.username is not None else user.full_name} has been declined.",
+                    f"Occured error. User {'@'+ user.username if user.username is not None else user.full_name} has been declined. Error: {e}",
                 )
+    elif chat_id == settings.OUTER_CHANNEL_ID:
+        await bot.send_message(
+                        settings.LOG_CHAT_ID,
+                        f"User {'@'+ user.username if user.username is not None else user.full_name} has joined a public channel.",
+                    )
 
 
 @dp.chat_member()
@@ -71,14 +76,15 @@ async def handle_chat_member_update(chat_member_update: types.ChatMemberUpdated)
         await bot.ban_chat_member(
             chat_id=settings.INNER_CHANNEL_ID,
             user_id=user_id,
-            until_date=time + datetime.timedelta(seconds=30),
+            until_date=time + datetime.timedelta(days=92),
         )
-        await bot.unban_chat_member(chat_id=settings.INNER_CHANNEL_ID, user_id=user_id)
+        # Uncomment if you don't want to actually ban users
+        # await bot.unban_chat_member(chat_id=settings.INNER_CHANNEL_ID, user_id=user_id)
         if chat_id == settings.OUTER_CHANNEL_ID:
             if settings.LOG_CHAT_ID is not None:
                 await bot.send_message(
                     settings.LOG_CHAT_ID,
-                    f"User {'@'+ user.username if user.username is not None else user.full_name} has left the outer channel.",
+                    f"User {'@'+ user.username if user.username is not None else user.full_name} has left the public channel.",
                 )
             await bot.send_message(
                 chat_id=user_id,
@@ -88,11 +94,11 @@ async def handle_chat_member_update(chat_member_update: types.ChatMemberUpdated)
             if settings.LOG_CHAT_ID is not None:
                 await bot.send_message(
                     settings.LOG_CHAT_ID,
-                    f"User {'@'+ user.username if user.username is not None else user.full_name} has left the inner channel.",
+                    f"User {'@'+ user.username if user.username is not None else user.full_name} has left the private channel.",
                 )
             await bot.send_message(
                 chat_id=user_id,
-                text=f"Нам сумно, що ви покидаєте нашу скарбницю🥺. Ми завжди чекатимемо на ваше повернення\nПосилання на основний канал: {settings.LINK}",
+                text=f"Нам сумно, що ви покидаєте нашу скарбницю🥺. Ми завжди чекатимемо на ваше повернення, для цього сконтактуйте з адміністрацією каналу\nПосилання на основний канал: {settings.LINK}",
             )
 
 
